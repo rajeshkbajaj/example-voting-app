@@ -1,1 +1,1 @@
-# example-voting-app
+# Set up docker voting application using docker-compose
