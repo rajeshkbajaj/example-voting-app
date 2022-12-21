@@ -1,32 +1,42 @@
-redis:
-  container_name: redis
-  image: redis
+services:
+  redis:
+    image: redis
 
-vote:
-  container_name: voting-app
-  image: voting-app
-  ports:
-    - 5000:80
-  links:
-    - redis
+  vote1:
+    image: voting-app
+    ports:
+      - "5000:80"
+    links:
+     - redis
+  vote2:
+    image: voting-app
+    ports:
+      - "5002:80"
+    links:
+     - redis
+  nginx:
+    image: nginx
+    ports:
+      - "8080:80"
+    links: 
+     - vote1
+     - vote2 
 
-db:
-  container_name: db
-  image: postgres:9.4
-  environment:
-    - POSTGRES_HOST_AUTH_METHOD=trust
 
-worker:
-  container_name: worker-app
-  image: worker-app
-  links:
-    - redis
-    - db
+  db:
+    image: postgres:9.4
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
-result:
-  container_name: result-app
-  image: result-app
-  ports:
-   - 5001:80
-  links:
-   - db
+  worker:
+    image: worker-app
+    links:
+      - redis
+      - db
+
+  result:
+    image: result-app
+    ports:
+      - "5001:80"
+    links:
+      - db
